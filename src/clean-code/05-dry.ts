@@ -31,6 +31,7 @@ class Product {
         // if ( this.price <= 0) throw Error('price is zero');
         // if ( this.size.length <= 0) throw Error('size is empty');
 
+        //dry
         if ( !this.isProductReady() ) return;
         
         return `${ this.name } (${ this.price}), ${ this.size}`;
