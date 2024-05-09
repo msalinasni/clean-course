@@ -1,7 +1,14 @@
+import localPosts from './../data/local-database.json'
+import { Post } from './05-dependency-b';
 
-export class LocalDataBaseService {
+export abstract class PostProvider {
 
-    async getFakePosts() {
+    abstract getPosts(): Promise<Post[]>;
+}
+
+export class LocalDataBaseService implements PostProvider {
+
+    async getPosts() {
         return [
             {
                 'userId': 1,
@@ -19,3 +26,34 @@ export class LocalDataBaseService {
 
 }
 
+
+export class JsonDataBaseService implements PostProvider {
+
+    async getPosts(){
+        return localPosts;
+    }
+}
+
+
+export class WebApiPostService implements PostProvider {
+
+    constructor(
+        private readonly http: HttpClient,
+        private readonly url: string
+    ){}
+
+    async getPosts() {
+        const { data } = await this.http.get(this.url);
+        return data;
+    }
+}
+
+export class HttpClient {
+    async get( url: string ) {
+        const resp = await fetch( url );
+        const data = await resp.json();
+
+        return { data, status: resp.status };
+    } 
+
+}
